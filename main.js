@@ -141,6 +141,7 @@ function get_out(request, func){
 }
 
 function post_new(path, request, func) {
-    bd.insert({inout: 'out', request})
+    request['inout']='out';
+    bd.insert(request, func)
 }
 
