@@ -85,10 +85,20 @@ app.listen(port, function () {
 });
 
 function get_to(request, func){
+    if (Math.random() < 0.2) {
+        setTimeout(function () {
+            random_to_email();
+        }, 0);
+    }
     bd.find({"to":request}, func);
 }
 
 function get_from(request, func){
+    if (Math.random() < 0.2) {
+        setTimeout(function () {
+            random_to_email();
+        }, 0);
+    }
     bd.find({"from":request}, func);
 }
 
