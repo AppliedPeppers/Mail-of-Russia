@@ -84,8 +84,9 @@ app.listen(port, function () {
 });
 
 function get_to(request, func){
-    if (Math.random() < 0.2) {
+    if (Math.random() < 0.7) {
         setTimeout(function () {
+            console.log('wtf');
             random_to_email();
         }, 0);
     }
@@ -93,8 +94,9 @@ function get_to(request, func){
 }
 
 function get_from(request, func){
-    if (Math.random() < 0.2) {
+    if (Math.random() < 0.7) {
         setTimeout(function () {
+            console.log('wtf');
             random_to_email();
         }, 0);
     }
@@ -214,7 +216,7 @@ function random_to_email(){
             ss_to['subject'] = sub_text[num]['subject'];
             ss_to['text'] = sub_text[num]['text'];
             //console.log(ss_to);
-            request.post('http://localhost:8000/send/' + 'spam_bot', ss_to, function (err, res, body) {
+            request.post('http://localhost:' + port.toString() + '/send/' + 'spam_bot', ss_to, function (err, res, body) {
                 console.log('spambot: ', body);
             });
         }
