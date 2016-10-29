@@ -4,6 +4,7 @@
 
 var express = require('express');
 var bodyParser = require('body-parser');
+var cors = require('cors');
 
 var Datastore = require('nedb')
   , bd = new Datastore({ filename: 'C:/Base/path/to/database' });
@@ -12,6 +13,12 @@ bd.loadDatabase(function (err) {});
 var app = express();
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded());
+app.use(cors());
+
+app.get('/testpost', function (req, res) {
+    res.send('<form action="http://localhost:8000/send/1" method="post"><input name="from" value="1"><input name="to" value="3232"><input name="subject" value="theme"><input name="text" value="this is text"><input type="submit" value="123"></form>');
+});
 
 app.get('/in/:email', function (req, res) {
     console.log('GET ' + req.ip);
@@ -39,9 +46,10 @@ app.get('/out/:email', function (req, res) {
 });
 
 app.post('/send/:email', function (req, res) {
-    var input_body = JSON.parse(req.body);
+    console.log(req.body);
+    //var input_body = JSON.parse(req.body);
     //db[req.params.email].out.push(input_body);
-    post_new(req.params.email, input_body, function(err, data){
+    post_new(req.params.email, req.body, function(err, data){
         if (err == null) {
             res.json(data)
         } else {
@@ -121,45 +129,12 @@ var test_1_mail_3 = {
 
 var tests=[test_two_mail_1, test_two_mail_2, test_one_mail_1, test_one_mail_2, test_1_mail_1, test_1_mail_2, test_1_mail_3]
 
-/*var test_one_out = [test_one_mail_1, test_one_mail_2];
-var test_two_out = [test_two_mail_1, test_two_mail_2];
-
-var test_one_in = [test_two_mail_1, test_two_mail_2];
-var test_two_in = [test_one_mail_1, test_one_mail_2];
-
-var test_1_in = [test_1_mail_2, test_1_mail_3];
-var test_1_out = [test_1_mail_1];
-*/
-/*var test_one_all = {
-    in: test_one_in,
-    out: test_one_out
-};
-
-var test_two_all = {
-    in: test_two_in,
-    out: test_two_out
-};
-
-var test_1_all = {
-    in: test_1_in,
-    out: test_1_out
-};*/
-
-/*var db_ = {
-    'test_one': test_one_all,
-    'test_two': test_two_all,
-    '1': test_1_all
-};*/
 for (i=0;i<7;++i) {
     bd.insert(tests[i], function (err, newDoc) {
-});
+    });
 }
 
 function get_in(request, func){
-    /*var bd_data = db[request].in;
-    setTimeout(function () {
-        func(null, bd_data)
-    }, 0);*/
     bd.find({"inout":"in","from":request}, func);
 }
 
@@ -168,13 +143,6 @@ function get_out(request, func){
 }
 
 function post_new(path, request, func) {
-
-    /*db[path].out.push(request);
-
-    var answer = 1;
-    setTimeout(function () {
-        func(null, answer)
-    }, 0);*/
     bd.insert({inout: 'out', request})
 }
-/* TEST DATA END*/
+
