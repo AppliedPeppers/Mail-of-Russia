@@ -14,5 +14,6 @@ def send_simple_message():
 """
 e-mail: epostarussia@gmail.com
 пароль: 12eposta345
+https://mailgun.com/app/dashboard
 """
 
