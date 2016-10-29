@@ -117,7 +117,7 @@ function change_words(json) {
     }
     text=a.join('')
     json['text']=text;
-    return json;
+    return [json];
 }
 //change_words(text)
 
@@ -132,7 +132,7 @@ function random_delete(json) {
     }
     text=a.join('')
     json['text']=text;
-    return json;
+    return [json];
 }
 //random_delete(text)
 
@@ -164,5 +164,5 @@ function add_random(json) {
     }
     text=a.join(' ')
     json['text']=text;
-    return json;
+    return [json];
 }
