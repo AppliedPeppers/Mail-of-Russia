@@ -6,7 +6,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 
 var Datastore = require('nedb')
-  , bd = new Datastore({ filename: 'C:/Base/path/to/database' });
+  , bd = new Datastore({ filename: './db' });
 bd.loadDatabase(function (err) {});
 
 var app = express();
@@ -47,7 +47,7 @@ app.post('/send/:email', function (req, res) {
     console.log(req.body);
     //var input_body = JSON.parse(req.body);
     //db[req.params.email].out.push(input_body);
-    post_new(req.params.email, req.body, function(err, data){
+    post_new(req.body, function(err, data){
         if (err == null) {
             res.json(data)
         } else {
@@ -69,7 +69,7 @@ app.listen(port, function () {
 
 /* Test DATA */
 
-var test_two_mail_1 = {
+/*var test_two_mail_1 = {
     inout: 'in',
     from : 'test_two@email.io',
     to : 'test_one@email.io',
@@ -130,7 +130,7 @@ var tests=[test_two_mail_1, test_two_mail_2, test_one_mail_1, test_one_mail_2, t
 for (i=0;i<7;++i) {
     bd.insert(tests[i], function (err, newDoc) {
     });
-}
+}*/
 
 function get_in(request, func){
     bd.find({"inout":"in","from":request}, func);
@@ -140,7 +140,7 @@ function get_out(request, func){
     bd.find({"inout":"out","from":request}, func);
 }
 
-function post_new(path, request, func) {
+function post_new(request, func) {
     request['inout']='out';
     bd.insert(request, func)
 }
