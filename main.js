@@ -50,25 +50,31 @@ app.get('/out/:email', function (req, res) {
 
 });
 
+funcs = [change_words, random_delete, add_random];
+
 app.post('/send/:email', function (req, res) {
     //var input_body = JSON.parse(req.body);
     //db[req.params.email].out.push(input_body);
     var now = new Date();
     var del = getPresetRandom() * 1000;
     console.log('POST\tdelay: ', del);
-    var post_fun = function () {
-        post_new(req.params.email, req.body, del, function(err, data){
-            if (err == null) {
-                //var r = data._id;
-                res.json(data)
-            } else {
-                console.log(err);
-                res.send(err);
-            }
-        });
-    };
 
-    setTimeout(post_fun, 0)
+    var noised = funcs[getPresetRandom_forfuncs()](req.body);
+
+    noised.forEach(function (item, i, arr) {
+        var post_fun = function () {
+            post_new(req.params.email, item, del, function(err, data){
+                if (err == null) {
+                    //var r = data._id;
+                    res.json(data)
+                } else {
+                    console.log(err);
+                    res.send(err);
+                }
+            });
+        };
+        setTimeout(post_fun, 0)
+    });
 
 });
 
@@ -105,6 +111,12 @@ function getRandomInt(min, max) {
 
 function getPresetRandom() {
     var r = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 7, 7, 7, 15, 15, 10, 10, 9, 12];
+    //var r = [10, 10, 10, 10];
+    return r[Math.floor(Math.random() * r.length)];
+}
+
+function getPresetRandom_forfuncs() {
+    var r = [0, 0, 0, 0, 0, 1, 2, 3, 4, 5];
     //var r = [10, 10, 10, 10];
     return r[Math.floor(Math.random() * r.length)];
 }
