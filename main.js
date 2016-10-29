@@ -169,4 +169,4 @@ function change_words(text) {
     text=a.join('')
     console.log(text);
 }
-change(text)
+change_words(text)
