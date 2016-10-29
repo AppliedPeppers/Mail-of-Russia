@@ -4,7 +4,6 @@
 
 var express = require('express');
 var bodyParser = require('body-parser');
-var cors = require('cors');
 
 var Datastore = require('nedb')
   , bd = new Datastore({ filename: 'C:/Base/path/to/database' });
@@ -14,7 +13,6 @@ var app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
-app.use(cors());
 
 app.get('/testpost', function (req, res) {
     res.send('<form action="http://localhost:8000/send/1" method="post"><input name="from" value="1"><input name="to" value="3232"><input name="subject" value="theme"><input name="text" value="this is text"><input type="submit" value="123"></form>');
