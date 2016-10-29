@@ -1,63 +1,7 @@
-{"from":"spam_bot","time":1477778156849,"_id":"2LV3uJCwYdGlmwGv"}
-{"inout":"out","from":"test_one@email.io","to":"test_two@email.io","subject":"What I like","text":"I like pizza and ice-cream.","_id":"2iFRsfOSH1aYkiHT"}
-{"inout":"out","from":"test_one@email.io","to":"1","subject":"from two to 1","text":"Is this text the?","_id":"4plTb94d1DNrxPVN"}
-{"from":"spam_bot","time":1477778156851,"_id":"57fnTHP4Xpiyi9su"}
-{"inout":"out","from":"wtf@hz_kakoi_email.dot.net.org.com.ru.fr.io","to":"1","subject":"Not spam","text":"This is spam, param-pam-pam.","_id":"ApJiDSDdaEZUVMr9"}
-{"from":"spam_bot","time":1477778156853,"_id":"D5HgdeIdI2eB0Lxz"}
-{"from":"spam_bot","time":1477778156851,"_id":"J73zXRwqZLWaSWBe"}
-{"from":"spam_bot","time":1477778156849,"_id":"LF1rxHsVRFEUe71B"}
-{"from":"spam_bot","time":1477778156853,"_id":"LnKPefgrsuKHtu6j"}
-{"from":"spam_bot","time":1477778156852,"_id":"RuFdeTLJypSha8X1"}
-{"from":"spam_bot","time":1477778156852,"_id":"SeblfrgG4YEeWTkX"}
-{"inout":"out","from":"test_one@email.io","to":"test_two@email.io","subject":"What you like?","text":"What you like to play: guitar or chests","_id":"W366LnFPDuhGvA8u"}
-{"from":"spam_bot","time":1477778156851,"_id":"WpTT1JpLtpzqkDCN"}
 {"inout":"in","from":"test_two@email.io","to":"test_one@email.io","subject":"Re: What I like","text":"I like swimming.","_id":"ZP6mtvtTXwlO4fOa"}
-{"from":"spam_bot","time":1477778156852,"_id":"f4dxENjM5jy3gUgO"}
-{"from":"spam_bot","time":1477778156851,"_id":"fSgL4MkKsM0xjNEr"}
-{"from":"spam_bot","time":1477778156851,"_id":"iUvV947Gts3mkIsi"}
-{"from":"spam_bot","time":1477778156852,"_id":"q1WJjhnfLUbDapK1"}
-{"inout":"in","from":"1","to":"test_two@email.io","subject":"from 1 to two","text":"This is the text","_id":"rTquYqjhG0PGF8YM"}
-{"from":"spam_bot","time":1477778156851,"_id":"srmaswc7neC28ouh"}
 {"inout":"in","from":"test_two@email.io","to":"test_one@email.io","subject":"Re: What you like?","text":"I love to play Counter Strike.","_id":"wRt8LqGUgdcnkK8Y"}
-{"from":"spam_bot","time":1477778841281,"_id":"apYJrF4lFeQI8X23"}
-{"from":"spam_bot","time":1477778841281,"_id":"6RlLfmq1tf0CfRLv"}
-{"from":"spam_bot","time":1477778841283,"_id":"oG5sJqsvDXLmWCRl"}
-{"from":"spam_bot","time":1477778841283,"_id":"O9qVQsJvYrDGSt41"}
-{"from":"spam_bot","time":1477778841283,"_id":"8L62sGuC6I4Jhxiz"}
-{"from":"spam_bot","time":1477778841283,"_id":"bT08UgHDp1xkjH28"}
-{"from":"spam_bot","time":1477778841283,"_id":"FN4AzDwmHxOTCPnH"}
-{"from":"spam_bot","time":1477778841283,"_id":"fdeQNHRw1J7OK1LV"}
-{"from":"spam_bot","time":1477778841283,"_id":"zcjGfoIPDyLhJ41A"}
-{"from":"spam_bot","time":1477778841283,"_id":"WLpPfAcGej95Q7kR"}
-{"from":"spam_bot","time":1477778841284,"_id":"2IbkGDblpNcdaM1g"}
-{"from":"spam_bot","time":1477778841284,"_id":"msDvsXWDwuX9nanH"}
-{"from":"spam_bot","time":1477778841284,"_id":"h3WTI02saNQfQaHV"}
-{"from":"spam_bot","time":1477778841284,"_id":"LJLN5CByUdKu3NGd"}
-{"from":"spam_bot","time":1477778841284,"_id":"vCCZT9xFY8wrWSBv"}
-{"from":"spam_bot","time":1477778841284,"_id":"HPUqRiqVqbKdFRRP"}
-{"from":"spam_bot","time":1477778841285,"_id":"AWITyvf14kC5GBBl"}
-{"from":"spam_bot","time":1477778841285,"_id":"07FcX1c9LEfSroYh"}
-{"from":"spam_bot","time":1477778841285,"_id":"tlm3gPtY7q8f1WQp"}
-{"from":"spam_bot","time":1477778841285,"_id":"h8NCp5M69qCjKYtQ"}
-{"from":"spam_bot","time":1477778841285,"_id":"9UmQBm0ZibWmdmup"}
-{"from":"spam_bot","time":1477778841285,"_id":"3cLCAEEGPHOBnVOy"}
-{"from":"spam_bot","time":1477778841286,"_id":"lUr4fdAbkOm4fg6m"}
-{"from":"spam_bot","time":1477778841286,"_id":"umEIYVXD2op9FAuo"}
-{"from":"spam_bot","time":1477778841287,"_id":"ORegOdITGNkfjBcj"}
-{"from":"spam_bot","time":1477778841287,"_id":"3vyb0pS2SuKfMK4D"}
-{"from":"spam_bot","time":1477778841287,"_id":"7GJvJSRomM5WZ0iW"}
-{"from":"spam_bot","time":1477778841287,"_id":"dCpceMBNGU8Hc63g"}
-{"from":"spam_bot","time":1477778841288,"_id":"QO2DZshg9ViUWMTA"}
-{"from":"spam_bot","time":1477778841288,"_id":"gThehiGcfPO8BWom"}
-{"from":"spam_bot","time":1477778841288,"_id":"Y4rjmfjizoD4jzJz"}
-{"from":"spam_bot","time":1477778841288,"_id":"azHWeNMOWcQr9L3P"}
-{"from":"spam_bot","time":1477778841288,"_id":"Ik9ngF2WQNcUI2QO"}
-{"from":"spam_bot","time":1477778841288,"_id":"SRsDOHwuyOxZ1CUu"}
-{"from":"spam_bot","time":1477778841289,"_id":"NkjN9MmlQtAzetKn"}
-{"from":"spam_bot","time":1477778841289,"_id":"6D8vG4bY91SqPObn"}
-{"from":"spam_bot","time":1477778841289,"_id":"Yizlm1n8It1qa9km"}
-{"from":"spam_bot","time":1477778841289,"_id":"wH91LmoGBBko14dO"}
-{"from":"spam_bot","time":1477778841289,"_id":"Xass2eSHYvz4vgI7"}
-{"from":"spam_bot","time":1477778841289,"_id":"Ly14fyVKBEFCz9DL"}
-{"from":"spam_bot","time":1477778841291,"_id":"d2Vm6WrA6OTyaYUl"}
-{"from":"spam_bot","time":1477778841291,"_id":"1F3bp6qDvRQ5JmHd"}
+{"inout":"out","from":"test_one@email.io","to":"test_two@email.io","subject":"What I like","text":"I like pizza and ice-cream.","_id":"2iFRsfOSH1aYkiHT"}
+{"inout":"out","from":"test_one@email.io","to":"test_two@email.io","subject":"What you like?","text":"What you like to play: guitar or chests","_id":"W366LnFPDuhGvA8u"}
+{"inout":"in","from":"1","to":"test_two@email.io","subject":"from 1 to two","text":"This is the text","_id":"rTquYqjhG0PGF8YM"}
+{"inout":"out","from":"test_one@email.io","to":"1","subject":"from two to 1","text":"Is this text the?","_id":"4plTb94d1DNrxPVN"}
+{"inout":"out","from":"wtf@hz_kakoi_email.dot.net.org.com.ru.fr.io","to":"1","subject":"Not spam","text":"This is spam, param-pam-pam.","_id":"ApJiDSDdaEZUVMr9"}

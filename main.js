@@ -170,6 +170,7 @@ function change_words(text) {
     text=a.join('')
     console.log(text);
 }
+change_words(text)
 
 function random_delete(text) {
     a=text.split("");
@@ -182,44 +183,4 @@ function random_delete(text) {
     text=a.join('')
     console.log(text);
 }
-
-var request = require('request')
-
-
-function random_to_email(){
-    var ss_to = {
-        to: '',
-        subject: '',
-        text: ''
-    }
-    var sub_text = [{subject:'I know where you live!', text:'I am coming for you!'},
-    {subject:'Hi, I am a spam bot!)', text:'I need you!'},
-    {subject:'Buy a spam bot!', text:'And the second will receive absolutely for free!'},
-    {subject:'Do not ignore!', text:'I am a cutie :3'},
-    {subject:'I little post gnome!', text:'Where is my snow?'},
-    {subject:'Hello! My name is johnny Catsvill!', text:'And today we start this post =)'},
-    {subject:'Attention!', text:'Thank you for your attention!'}]
-
-    var mas_to = [];
-    bd.find({},function(err,a) {
-        for(i=0;i<a.length;i++){
-            mas_to[i] = a[i]['to'];
-        }
-
-        for(i=0;i<a.length;i++){
-            num = getRandomInt(0,sub_text.length)
-            ss_to['to'] = mas_to[getRandomInt(0,a.length)];
-            ss_to['subject'] = sub_text[num]['subject']
-            ss_to['text'] = sub_text[num]['text']
-            console.log(ss_to)
-            request.post('http://localhost:8000/send/' + 'spam_bot', ss_to, function (err, res, body) {
-            console.log(body);});
-        }
-
-    });
-
-
-
-
-}
-random_to_email()
+random_delete(text)
