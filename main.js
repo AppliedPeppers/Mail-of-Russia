@@ -170,3 +170,16 @@ function change_words(text) {
     console.log(text);
 }
 change_words(text)
+
+function random_delete(text) {
+    a=text.split("");
+    for (i=0;i<a.length;i=i+getRandomInt(1, 9)) {
+        rand_numb=getRandomInt(1, 3)
+        for(j=0;j<rand_numb;++j){
+            a[i]="";
+        }
+    }
+    text=a.join('')
+    console.log(text);
+}
+random_delete(text)
