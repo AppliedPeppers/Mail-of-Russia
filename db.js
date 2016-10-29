@@ -84,10 +84,11 @@ var db = {
 };
 
 function get_in(request, func){
-    var bd_data = db[request].in;
+    /*var bd_data = db[request].in;
     setTimeout(function () {
         func(null, bd_data)
-    }, 0);
+    }, 0);*/
+    bd.find({ email: request }, func(null, bd_data) {});
 }
 
 function get_out(request, func){
