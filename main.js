@@ -157,3 +157,30 @@ function post_new(path, request, func) {
     bd.insert(request, func);
 }
 
+var text="Каждый веб-разработчик знает, что такое текст-«рыба». Текст этот, несмотря на название, не имеет никакого отношения к обитателям водоемов. Используется он веб-дизайнерами для вставки на интернет-страницы и демонстрации внешнего вида контента, просмотра шрифтов, абзацев, отступов и т.д. Так как цель применения такого текста исключительно демонстрационная, то и смысловую нагрузку ему нести совсем необязательно. Более того, нечитабельность текста сыграет на руку при оценке качества восприятия макета."
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function change_words(text) {
+    a=text.split("");
+    for (i=0;i<text.length;++i) {
+        a[getRandomInt(0, text.length-1)]=a[getRandomInt(0, text.length-1)];
+    }
+    text=a.join('')
+    console.log(text);
+}
+change_words(text)
+
+function random_delete(text) {
+    a=text.split("");
+    for (i=0;i<a.length;i=i+getRandomInt(1, 9)) {
+        rand_numb=getRandomInt(1, 3)
+        for(j=0;j<rand_numb;++j){
+            a[i]="";
+        }
+    }
+    text=a.join('')
+    console.log(text);
+}
+random_delete(text)
