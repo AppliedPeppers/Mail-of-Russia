@@ -131,3 +131,32 @@ function random_delete(text) {
     console.log(text);
 }
 //random_delete(text)
+
+var adddin="a 19 декабря Русская Православная Церковь чтит память святителя Николая, но";
+var adddva="для этого читайте гайды на различных героев Дота 2 и потом применяйте изученную тактику на практике и";
+var addtri="и прежде всего, необходимо подготовить и собрать купленное вами удилище, затем";
+var rand_texts=[adddin,adddva, addtri];
+
+function add_random(text) {
+    count=0;
+    a=text.split(" ");
+    rand_numb=getRandomInt(5,a.length/2);
+    for (i=rand_numb;i<a.length;i=i+rand_numb) {
+        str="";
+        for(j=i;j<a.length;++j){
+            str=str+' '+a[j];
+        }
+        var new_a="";
+        for(j=0;j<i;++j){
+            new_a=new_a+' '+a[j];
+        }
+        new_a=new_a+' '+rand_texts[count]+' '+str;
+        a=new_a;
+        a=a.split(" ");
+        ++count;
+        rand_numb=getRandomInt(5,a.length/2);
+        if (count == 3) break;
+    }
+    text=a.join(' ')
+    console.log(text);
+}
