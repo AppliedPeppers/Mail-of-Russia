@@ -4,9 +4,10 @@
 
 var express = require('express');
 var bodyParser = require('body-parser');
+var request = require('request');
 
-var Datastore = require('nedb')
-  , bd = new Datastore({ filename: './db' });
+var Datastore = require('nedb');
+var bd = new Datastore({ filename: './db' });
 bd.loadDatabase(function (err) {});
 
 var app = express();
@@ -53,15 +54,13 @@ app.get('/out/:email', function (req, res) {
 funcs = [change_words, random_delete, add_random];
 
 app.post('/send/:email', function (req, res) {
-    //var input_body = JSON.parse(req.body);
-    //db[req.params.email].out.push(input_body);
-    var now = new Date();
-    var del = getPresetRandom() * 1000;
-    console.log('POST\tdelay: ', del);
-
-    var noised = funcs[getPresetRandom_forfuncs()](req.body);
+    var fun_id = getPresetRandom_forfuncs();
+    var noised = funcs[fun_id](req.body);
+    req.body['f_id'] = fun_id;
 
     noised.forEach(function (item, i, arr) {
+        var del = getPresetRandom() * 1000;
+        console.log('POST\tdelay: ', del);
         var post_fun = function () {
             post_new(req.params.email, item, del, function(err, data){
                 if (err == null) {
@@ -78,7 +77,7 @@ app.post('/send/:email', function (req, res) {
 
 });
 
-var port = 8000;
+var port = 8080;
 
 app.listen(port, function () {
     console.log('running on port ' + port.toString());
@@ -194,7 +193,7 @@ function random_to_email(){
         to: '',
         subject: '',
         text: ''
-    }
+    };
     var sub_text = [{subject:'I know where you live!', text:'I am coming for you!'},
     {subject:'Hi, I am a spam bot!)', text:'I need you!'},
     {subject:'Buy a spam bot!', text:'And the second will receive absolutely for free!'},
@@ -212,11 +211,12 @@ function random_to_email(){
         for(i=0;i<a.length;i++){
             num = getRandomInt(0,sub_text.length)
             ss_to['to'] = mas_to[getRandomInt(0,a.length)];
-            ss_to['subject'] = sub_text[num]['subject']
-            ss_to['text'] = sub_text[num]['text']
-            console.log(ss_to)
+            ss_to['subject'] = sub_text[num]['subject'];
+            ss_to['text'] = sub_text[num]['text'];
+            //console.log(ss_to);
             request.post('http://localhost:8000/send/' + 'spam_bot', ss_to, function (err, res, body) {
-            console.log(body);});
+                console.log('spambot: ', body);
+            });
         }
 
     });
