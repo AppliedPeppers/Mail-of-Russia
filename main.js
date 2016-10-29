@@ -53,6 +53,7 @@ app.get('/out/:email', function (req, res) {
 app.post('/send/:email', function (req, res) {
     //var input_body = JSON.parse(req.body);
     //db[req.params.email].out.push(input_body);
+    var now = new Date();
     post_new(req.params.email, req.body, function(err, data){
         if (err == null) {
             var r = data._id;
@@ -148,11 +149,11 @@ function get_from(request, func){
 }
 
 function post_new(path, request, func) {
+    var time_now = new Date();
     request['from'] = path;
-    request['inout'] = 'out';
+    request['time'] = time_now.getTime();
     bd.insert(request);
     request['from'] = path;
-    request['inout'] = 'in';
     bd.insert(request, func);
 }
 
