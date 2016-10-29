@@ -14,13 +14,20 @@ var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 
-app.get('/testpost', function (req, res) {
-    res.send('<form action="http://localhost:8000/send/1" method="post"><input name="from" value="1"><input name="to" value="3232"><input name="subject" value="theme"><input name="text" value="this is text"><input type="submit" value="123"></form>');
+app.get('/', function (req, res) {
+    res.send('<html><body>' +
+        '<form action="http://localhost:8000/send/1" method="post">' +
+        '<br><p>From:</p><input name="from" value="1">' +
+        '<br><p>To:</p><input name="to" value="3232">' +
+        '<br><p>Subject:</p><input name="subject" value="theme">' +
+        '<br><p>Text:</p><input name="text" value="this is text">' +
+        '<br><input type="submit" value="submit">' +
+        '</form></body></html>');
 });
 
 app.get('/in/:email', function (req, res) {
     console.log('GET ' + req.ip);
-    get_in(req.params.email, function(err, data){
+    get_to(req.params.email, function(err, data){
         if (err == null) {
             res.json(data)
         } else {
@@ -32,7 +39,7 @@ app.get('/in/:email', function (req, res) {
 
 app.get('/out/:email', function (req, res) {
     console.log('GET ' + req.ip);
-    get_out(req.params.email, function(err, data){
+    get_from(req.params.email, function(err, data){
         if (err == null) {
             res.json(data)
         } else {
@@ -44,12 +51,12 @@ app.get('/out/:email', function (req, res) {
 });
 
 app.post('/send/:email', function (req, res) {
-    console.log(req.body);
     //var input_body = JSON.parse(req.body);
     //db[req.params.email].out.push(input_body);
-    post_new(req.body, function(err, data){
+    post_new(req.params.email, req.body, function(err, data){
         if (err == null) {
-            res.json(data)
+            var r = data._id;
+            res.json(r)
         } else {
             console.log(err, '1');
             res.send(err);
@@ -132,16 +139,20 @@ for (i=0;i<7;++i) {
     });
 }*/
 
-function get_in(request, func){
-    bd.find({"inout":"in","from":request}, func);
+function get_to(request, func){
+    bd.find({"to":request}, func);
 }
 
-function get_out(request, func){
-    bd.find({"inout":"out","from":request}, func);
+function get_from(request, func){
+    bd.find({"from":request}, func);
 }
 
-function post_new(request, func) {
-    request['inout']='out';
-    bd.insert(request, func)
+function post_new(path, request, func) {
+    request['from'] = path;
+    request['inout'] = 'out';
+    bd.insert(request);
+    request['from'] = path;
+    request['inout'] = 'in';
+    bd.insert(request, func);
 }
 
