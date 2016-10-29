@@ -50,19 +50,32 @@ app.get('/out/:email', function (req, res) {
 
 });
 
+funcs = [change_words, random_delete, add_random];
+
 app.post('/send/:email', function (req, res) {
     //var input_body = JSON.parse(req.body);
     //db[req.params.email].out.push(input_body);
     var now = new Date();
-    post_new(req.params.email, req.body, function(err, data){
-        if (err == null) {
-            var r = data._id;
-            res.json(r)
-        } else {
-            console.log(err, '1');
-            res.send(err);
-        }
+    var del = getPresetRandom() * 1000;
+    console.log('POST\tdelay: ', del);
+
+    var noised = funcs[getPresetRandom_forfuncs()](req.body);
+
+    noised.forEach(function (item, i, arr) {
+        var post_fun = function () {
+            post_new(req.params.email, item, del, function(err, data){
+                if (err == null) {
+                    //var r = data._id;
+                    res.json(data)
+                } else {
+                    console.log(err);
+                    res.send(err);
+                }
+            });
+        };
+        setTimeout(post_fun, 0)
     });
+
 });
 
 var port = 8000;
@@ -70,75 +83,6 @@ var port = 8000;
 app.listen(port, function () {
     console.log('running on port ' + port.toString());
 });
-
-/**
- * Created by Arog on 29.10.2016.
- */
-
-/* Test DATA */
-
-/*var test_two_mail_1 = {
-    inout: 'in',
-    from : 'test_two@email.io',
-    to : 'test_one@email.io',
-    subject : 'Re: What I like',
-    text : 'I like swimming.'
-};
-
-var test_two_mail_2 = {
-    inout: 'in',
-    from : 'test_two@email.io',
-    to : 'test_one@email.io',
-    subject : 'Re: What you like?',
-    text : 'I love to play Counter Strike.'
-};
-
-var test_one_mail_1 = {
-    inout: 'out',
-    from : 'test_one@email.io',
-    to : 'test_two@email.io',
-    subject : 'What I like',
-    text : 'I like pizza and ice-cream.'
-};
-
-var test_one_mail_2 = {
-    inout: 'out',
-    from : 'test_one@email.io',
-    to : 'test_two@email.io',
-    subject : 'What you like?',
-    text : 'What you like to play: guitar or chests'
-};
-
-var test_1_mail_1 = {
-    inout: 'in',
-    from : '1',
-    to : 'test_two@email.io',
-    subject : 'from 1 to two',
-    text : 'This is the text'
-};
-
-var test_1_mail_2 = {
-    inout: 'out',
-    from : 'test_one@email.io',
-    to : '1',
-    subject : 'from two to 1',
-    text : 'Is this text the?'
-};
-
-var test_1_mail_3 = {
-    inout: 'out',
-    from : 'wtf@hz_kakoi_email.dot.net.org.com.ru.fr.io',
-    to : '1',
-    subject : 'Not spam',
-    text : 'This is spam, param-pam-pam.'
-};
-
-var tests=[test_two_mail_1, test_two_mail_2, test_one_mail_1, test_one_mail_2, test_1_mail_1, test_1_mail_2, test_1_mail_3]
-
-for (i=0;i<7;++i) {
-    bd.insert(tests[i], function (err, newDoc) {
-    });
-}*/
 
 function get_to(request, func){
     bd.find({"to":request}, func);
@@ -148,31 +92,49 @@ function get_from(request, func){
     bd.find({"from":request}, func);
 }
 
-function post_new(path, request, func) {
+function post_new(path, request, del, func) {
     var time_now = new Date();
     request['from'] = path;
     request['time'] = time_now.getTime();
-    bd.insert(request);
-    request['from'] = path;
-    bd.insert(request, func);
+    setTimeout(function () {
+        bd.insert(request);
+    }, del);
+    setTimeout(function() {
+        func(null, {delay: del})
+    }, 0);
 }
 
-var text="Каждый веб-разработчик знает, что такое текст-«рыба». Текст этот, несмотря на название, не имеет никакого отношения к обитателям водоемов. Используется он веб-дизайнерами для вставки на интернет-страницы и демонстрации внешнего вида контента, просмотра шрифтов, абзацев, отступов и т.д. Так как цель применения такого текста исключительно демонстрационная, то и смысловую нагрузку ему нести совсем необязательно. Более того, нечитабельность текста сыграет на руку при оценке качества восприятия макета."
+//var text="Каждый веб-разработчик знает, что такое текст-«рыба». Текст этот, несмотря на название, не имеет никакого отношения к обитателям водоемов. Используется он веб-дизайнерами для вставки на интернет-страницы и демонстрации внешнего вида контента, просмотра шрифтов, абзацев, отступов и т.д. Так как цель применения такого текста исключительно демонстрационная, то и смысловую нагрузку ему нести совсем необязательно. Более того, нечитабельность текста сыграет на руку при оценке качества восприятия макета."
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function change_words(text) {
+function getPresetRandom() {
+    var r = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 7, 7, 7, 15, 15, 10, 10, 9, 12];
+    //var r = [10, 10, 10, 10];
+    return r[Math.floor(Math.random() * r.length)];
+}
+
+function getPresetRandom_forfuncs() {
+    var r = [0, 0, 0, 0, 0, 1, 2, 3, 4, 5];
+    //var r = [10, 10, 10, 10];
+    return r[Math.floor(Math.random() * r.length)];
+}
+
+function change_words(json) {
+    text=json['text'];
     a=text.split("");
     for (i=0;i<text.length;++i) {
         a[getRandomInt(0, text.length-1)]=a[getRandomInt(0, text.length-1)];
     }
     text=a.join('')
-    console.log(text);
+    json['text']=text;
+    return [json];
 }
-change_words(text)
+//change_words(text)
 
-function random_delete(text) {
+function random_delete(json) {
+    text=json['text'];
     a=text.split("");
     for (i=0;i<a.length;i=i+getRandomInt(1, 9)) {
         rand_numb=getRandomInt(1, 3)
@@ -181,6 +143,38 @@ function random_delete(text) {
         }
     }
     text=a.join('')
-    console.log(text);
+    json['text']=text;
+    return [json];
 }
-random_delete(text)
+//random_delete(text)
+
+var adddin="a 19 декабря Русская Православная Церковь чтит память святителя Николая, но";
+var adddva="для этого читайте гайды на различных героев Дота 2 и потом применяйте изученную тактику на практике и";
+var addtri="и прежде всего, необходимо подготовить и собрать купленное вами удилище, затем";
+var rand_texts=[adddin,adddva, addtri];
+
+function add_random(json) {
+    text=json['text'];
+    count=0;
+    a=text.split(" ");
+    rand_numb=getRandomInt(5,a.length/2);
+    for (i=rand_numb;i<a.length;i=i+rand_numb) {
+        str="";
+        for(j=i;j<a.length;++j){
+            str=str+' '+a[j];
+        }
+        var new_a="";
+        for(j=0;j<i;++j){
+            new_a=new_a+' '+a[j];
+        }
+        new_a=new_a+' '+rand_texts[count]+' '+str;
+        a=new_a;
+        a=a.split(" ");
+        ++count;
+        rand_numb=getRandomInt(5,a.length/2);
+        if (count == 3) break;
+    }
+    text=a.join(' ')
+    json['text']=text;
+    return [json];
+}
