@@ -4,10 +4,17 @@
 
 var express = require('express');
 var bodyParser = require('body-parser');
+var cors = require('cors');
 
 var app = express();
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded());
+app.use(cors());
+
+app.get('/testpost', function (req, res) {
+    res.send('<form action="http://localhost:8000/send/1" method="post"><input name="from" value="1"><input name="to" value="3232"><input name="subject" value="theme"><input name="text" value="this is text"><input type="submit" value="123"></form>');
+});
 
 app.get('/in/:email', function (req, res) {
     console.log('GET ' + req.ip);
@@ -35,9 +42,10 @@ app.get('/out/:email', function (req, res) {
 });
 
 app.post('/send/:email', function (req, res) {
-    var input_body = JSON.parse(req.body);
+    console.log(req.body);
+    //var input_body = JSON.parse(req.body);
     //db[req.params.email].out.push(input_body);
-    post_new(req.params.email, input_body, function(err, data){
+    post_new(req.params.email, req.body, function(err, data){
         if (err == null) {
             res.json(data)
         } else {
@@ -132,29 +140,32 @@ var test_1_all = {
     out: test_1_out
 };
 
-/*var db = {
+var db = {
     'test_one': test_one_all,
     'test_two': test_two_all,
     '1': test_1_all
-};*/
+};
 
 function get_in(request, func){
-    /*var bd_data = db[request].in;
+    var bd_data = db[request].in;
     setTimeout(function () {
         func(null, bd_data)
-    }, 0);*/
-    bd.find({ email: request }, func(null, bd_data));
+    }, 0);
+    //bd.find({ email: request }, func(null, bd_data));
 }
 
 function get_out(request, func){
-    bd.find({ email: request }, func(null, bd_data));
+    var bd_data = db[request].out;
+    setTimeout(function () {
+        func(null, bd_data)
+    }, 0);
+    //bd.find({ email: request }, func(null, bd_data));
 }
 
 function post_new(path, request, func) {
-
+    console.log(request);
     db[path].out.push(request);
-
-    var answer = 1;
+    var answer = 'answer';
     setTimeout(function () {
         func(null, answer)
     }, 0);
