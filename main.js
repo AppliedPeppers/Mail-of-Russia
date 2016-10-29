@@ -4,10 +4,6 @@
 
 var express = require('express');
 var bodyParser = require('body-parser');
-var multer = require('multer');
-var db = require('./db.js').db;
-var funcs = require('./db.js');
-var upload = multer();
 
 var app = express();
 
@@ -15,15 +11,19 @@ app.use(bodyParser.json());
 
 app.get('/in/:email', function (req, res) {
     console.log('GET ' + req.ip);
-    //console.log(db[req.params.email].in);
-    //console.log(db);
-    //console.log(req.params.email);
-    res.json(db[req.params.email].in);
+    get_in(req.params.email, function(err, data){
+        if (err == null) {
+            res.json(data)
+        } else {
+            console.log(err, '1');
+            res.send(err);
+        }
+    });
 });
 
 app.get('/out/:email', function (req, res) {
     console.log('GET ' + req.ip);
-    funcs.get_out(req.params.email, function(err, data){
+    get_out(req.params.email, function(err, data){
         if (err == null) {
             res.json(data)
         } else {
@@ -37,7 +37,7 @@ app.get('/out/:email', function (req, res) {
 app.post('/send/:email', function (req, res) {
     var input_body = JSON.parse(req.body);
     //db[req.params.email].out.push(input_body);
-    funcs.post_new(req.params.email, input_body, function(err, data){
+    post_new(req.params.email, input_body, function(err, data){
         if (err == null) {
             res.json(data)
         } else {
@@ -132,25 +132,22 @@ var test_1_all = {
     out: test_1_out
 };
 
-var db = {
+/*var db = {
     'test_one': test_one_all,
     'test_two': test_two_all,
     '1': test_1_all
-};
+};*/
 
 function get_in(request, func){
     /*var bd_data = db[request].in;
     setTimeout(function () {
         func(null, bd_data)
     }, 0);*/
-    bd.find({ email: request }, func(null, bd_data) {});
+    bd.find({ email: request }, func(null, bd_data));
 }
 
 function get_out(request, func){
-    var bd_data = db[request].out;
-    setTimeout(function () {
-        func(null, bd_data)
-    }, 0);
+    bd.find({ email: request }, func(null, bd_data));
 }
 
 function post_new(path, request, func) {
@@ -163,10 +160,3 @@ function post_new(path, request, func) {
     }, 0);
 }
 /* TEST DATA END*/
-
-module.exports = {
-    db: db,
-    get_in: get_in,
-    get_out: get_out,
-    post_new: post_new
-};
