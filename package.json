@@ -1,0 +1,14 @@
+{
+  "name": "Mail-of-Russia",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": {
+    "url": "https://github.com/AppliedPeppers/Mail-of-Russia.git",
+    "type": "git"
+  },
+  "author": "Vetcher <vetcher@ngs.ru>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.14.0"
+  }
+}
