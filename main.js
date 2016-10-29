@@ -5,6 +5,10 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 
+var Datastore = require('nedb')
+  , bd = new Datastore({ filename: 'C:/Base/path/to/database' });
+bd.loadDatabase(function (err) {});
+
 var app = express();
 
 app.use(bodyParser.json());
@@ -60,6 +64,7 @@ app.listen(port, function () {
 /* Test DATA */
 
 var test_two_mail_1 = {
+    inout: 'in',
     from : 'test_two@email.io',
     to : 'test_one@email.io',
     subject : 'Re: What I like',
@@ -67,6 +72,7 @@ var test_two_mail_1 = {
 };
 
 var test_two_mail_2 = {
+    inout: 'in',
     from : 'test_two@email.io',
     to : 'test_one@email.io',
     subject : 'Re: What you like?',
@@ -74,6 +80,7 @@ var test_two_mail_2 = {
 };
 
 var test_one_mail_1 = {
+    inout: 'out',
     from : 'test_one@email.io',
     to : 'test_two@email.io',
     subject : 'What I like',
@@ -81,6 +88,7 @@ var test_one_mail_1 = {
 };
 
 var test_one_mail_2 = {
+    inout: 'out',
     from : 'test_one@email.io',
     to : 'test_two@email.io',
     subject : 'What you like?',
@@ -88,6 +96,7 @@ var test_one_mail_2 = {
 };
 
 var test_1_mail_1 = {
+    inout: 'in',
     from : '1',
     to : 'test_two@email.io',
     subject : 'from 1 to two',
@@ -95,6 +104,7 @@ var test_1_mail_1 = {
 };
 
 var test_1_mail_2 = {
+    inout: 'out',
     from : 'test_one@email.io',
     to : '1',
     subject : 'from two to 1',
@@ -102,13 +112,16 @@ var test_1_mail_2 = {
 };
 
 var test_1_mail_3 = {
+    inout: 'out',
     from : 'wtf@hz_kakoi_email.dot.net.org.com.ru.fr.io',
     to : '1',
     subject : 'Not spam',
     text : 'This is spam, param-pam-pam.'
 };
 
-var test_one_out = [test_one_mail_1, test_one_mail_2];
+var tests=[test_two_mail_1, test_two_mail_2, test_one_mail_1, test_one_mail_2, test_1_mail_1, test_1_mail_2, test_1_mail_3]
+
+/*var test_one_out = [test_one_mail_1, test_one_mail_2];
 var test_two_out = [test_two_mail_1, test_two_mail_2];
 
 var test_one_in = [test_two_mail_1, test_two_mail_2];
@@ -116,8 +129,8 @@ var test_two_in = [test_one_mail_1, test_one_mail_2];
 
 var test_1_in = [test_1_mail_2, test_1_mail_3];
 var test_1_out = [test_1_mail_1];
-
-var test_one_all = {
+*/
+/*var test_one_all = {
     in: test_one_in,
     out: test_one_out
 };
@@ -130,33 +143,38 @@ var test_two_all = {
 var test_1_all = {
     in: test_1_in,
     out: test_1_out
-};
+};*/
 
-/*var db = {
+/*var db_ = {
     'test_one': test_one_all,
     'test_two': test_two_all,
     '1': test_1_all
 };*/
+for (i=0;i<7;++i) {
+    bd.insert(tests[i], function (err, newDoc) {
+});
+}
 
 function get_in(request, func){
     /*var bd_data = db[request].in;
     setTimeout(function () {
         func(null, bd_data)
     }, 0);*/
-    bd.find({ email: request }, func(null, bd_data));
+    bd.find({"inout":"in","from":request}, func);
 }
 
 function get_out(request, func){
-    bd.find({ email: request }, func(null, bd_data));
+    bd.find({"inout":"out","from":request}, func);
 }
 
 function post_new(path, request, func) {
 
-    db[path].out.push(request);
+    /*db[path].out.push(request);
 
     var answer = 1;
     setTimeout(function () {
         func(null, answer)
-    }, 0);
+    }, 0);*/
+    bd.insert({inout: 'out', request})
 }
 /* TEST DATA END*/
