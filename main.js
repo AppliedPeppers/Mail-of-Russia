@@ -55,13 +55,20 @@ var test_1_mail_2 = {
     text : 'Is this text the?'
 };
 
+var test_1_mail_3 = {
+    from : 'wtf@hz_kakoi_email.dot.net.org.com.ru.fr.io',
+    to : '1',
+    subject : 'Not spam',
+    text : 'This is spam, param-pam-pam.'
+};
+
 var test_one_out = [test_one_mail_1, test_one_mail_2];
 var test_two_out = [test_two_mail_1, test_two_mail_2];
 
 var test_one_in = [test_two_mail_1, test_two_mail_2];
 var test_two_in = [test_one_mail_1, test_one_mail_2];
 
-var test_1_in = [test_1_mail_2];
+var test_1_in = [test_1_mail_2, test_1_mail_3];
 var test_1_out = [test_1_mail_1];
 
 var test_one_all = {
