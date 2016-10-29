@@ -104,7 +104,7 @@ function post_new(path, request, del, func) {
     }, 0);
 }
 
-var text="Каждый веб-разработчик знает, что такое текст-«рыба». Текст этот, несмотря на название, не имеет никакого отношения к обитателям водоемов. Используется он веб-дизайнерами для вставки на интернет-страницы и демонстрации внешнего вида контента, просмотра шрифтов, абзацев, отступов и т.д. Так как цель применения такого текста исключительно демонстрационная, то и смысловую нагрузку ему нести совсем необязательно. Более того, нечитабельность текста сыграет на руку при оценке качества восприятия макета."
+//var text="Каждый веб-разработчик знает, что такое текст-«рыба». Текст этот, несмотря на название, не имеет никакого отношения к обитателям водоемов. Используется он веб-дизайнерами для вставки на интернет-страницы и демонстрации внешнего вида контента, просмотра шрифтов, абзацев, отступов и т.д. Так как цель применения такого текста исключительно демонстрационная, то и смысловую нагрузку ему нести совсем необязательно. Более того, нечитабельность текста сыграет на руку при оценке качества восприятия макета."
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
@@ -121,17 +121,20 @@ function getPresetRandom_forfuncs() {
     return r[Math.floor(Math.random() * r.length)];
 }
 
-function change_words(text) {
+function change_words(json) {
+    text=json['text'];
     a=text.split("");
     for (i=0;i<text.length;++i) {
         a[getRandomInt(0, text.length-1)]=a[getRandomInt(0, text.length-1)];
     }
     text=a.join('')
-    console.log(text);
+    json['text']=text;
+    return [json];
 }
 //change_words(text)
 
-function random_delete(text) {
+function random_delete(json) {
+    text=json['text'];
     a=text.split("");
     for (i=0;i<a.length;i=i+getRandomInt(1, 9)) {
         rand_numb=getRandomInt(1, 3)
@@ -140,7 +143,8 @@ function random_delete(text) {
         }
     }
     text=a.join('')
-    console.log(text);
+    json['text']=text;
+    return [json];
 }
 //random_delete(text)
 
@@ -149,7 +153,8 @@ var adddva="для этого читайте гайды на различных 
 var addtri="и прежде всего, необходимо подготовить и собрать купленное вами удилище, затем";
 var rand_texts=[adddin,adddva, addtri];
 
-function add_random(text) {
+function add_random(json) {
+    text=json['text'];
     count=0;
     a=text.split(" ");
     rand_numb=getRandomInt(5,a.length/2);
@@ -170,5 +175,6 @@ function add_random(text) {
         if (count == 3) break;
     }
     text=a.join(' ')
-    console.log(text);
+    json['text']=text;
+    return [json];
 }
