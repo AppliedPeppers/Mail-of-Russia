@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded());
 app.get('/', function (req, res) {
     res.send('<html><body>' +
         '<form action="http://localhost:8000/send/1" method="post">' +
-        '<br><p>From:</p><input name="from" value="1">' +
+        '<br><p>From:</p><input name="from" value="2">' +
         '<br><p>To:</p><input name="to" value="3232">' +
         '<br><p>Subject:</p><input name="subject" value="theme">' +
         '<br><p>Text:</p><input name="text" value="this is text">' +
