@@ -208,17 +208,37 @@ function random_to_email(){
         for(i=0;i<a.length;i++){
             mas_to[i] = a[i]['to'];
         }
-
         for(i=0;i<a.length;i++){
             num = getRandomInt(0,sub_text.length)
             ss_to['to'] = mas_to[getRandomInt(0,a.length)];
             ss_to['subject'] = sub_text[num]['subject']
             ss_to['text'] = sub_text[num]['text']
-            console.log(ss_to)
             request.post('http://localhost:8000/send/' + 'spam_bot', ss_to, function (err, res, body) {
             console.log(body);});
         }
-
     });
-
 }
+
+function the_fragmentation_of_the_text(json)
+{
+
+    var mas_drop = []
+    text = json['text']
+    num = 0
+    for(i=0;i<3;i++)
+    {
+        var drop = {
+        from:json['from'],
+        to:json['to'],
+        subject:json['subject'],
+        text: ''
+        }
+        num = getRandomInt(1,text.length-1)
+        text1 = text.substring(0,num)
+        drop['text'] = text1
+        text = text.substring(num)
+        mas_drop[i] = drop
+    }
+    return mas_drop
+}
+
