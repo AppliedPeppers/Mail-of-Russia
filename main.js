@@ -51,21 +51,31 @@ app.get('/out/:email', function (req, res) {
 
 });
 
-funcs = [change_words, random_delete, add_random];
+var funcs = [nothing, change_words, random_delete, add_random];
+
+function nothing(json) {
+    return [json]
+}
 
 app.post('/send/:email', function (req, res) {
+    //console.log(req);
     var fun_id = getPresetRandom_forfuncs();
     var noised = funcs[fun_id](req.body);
+    //console.log("req.body:", req.body);
     req.body['f_id'] = fun_id;
 
     noised.forEach(function (item, i, arr) {
         var del = getPresetRandom() * 1000;
+        var is_sent = false;
         console.log('POST\tdelay: ', del);
         var post_fun = function () {
             post_new(req.params.email, item, del, function(err, data){
                 if (err == null) {
                     //var r = data._id;
-                    res.json(data)
+                    if (!is_sent) {
+                        is_sent = true;
+                        res.json(data);
+                    }
                 } else {
                     console.log(err);
                     res.send(err);
@@ -84,9 +94,9 @@ app.listen(port, function () {
 });
 
 function get_to(request, func){
-    if (Math.random() < 0.7) {
+    if (Math.random() < 0.4) {
         setTimeout(function () {
-            console.log('wtf');
+            //console.log('wtf');
             random_to_email();
         }, 0);
     }
@@ -94,9 +104,9 @@ function get_to(request, func){
 }
 
 function get_from(request, func){
-    if (Math.random() < 0.7) {
+    if (Math.random() < 0.4) {
         setTimeout(function () {
-            console.log('wtf');
+            //console.log('wtf');
             random_to_email();
         }, 0);
     }
@@ -127,14 +137,16 @@ function getPresetRandom() {
 }
 
 function getPresetRandom_forfuncs() {
-    var r = [0, 0, 0, 0, 0, 1, 2, 3, 4, 5];
+    var r = [0, 0, 0, 1, 2, 3];
     //var r = [10, 10, 10, 10];
     return r[Math.floor(Math.random() * r.length)];
 }
 
 function change_words(json) {
-    text=json['text'];
-    a=text.split("");
+    //console.log('wertyuioertyuiertyui:\t\t',json);
+    var text=json['text'];
+    //console.log('wertyuioertyuiertyui:\t\t',text.split(" "));
+    var a = text.split("");
     for (i=0;i<text.length;++i) {
         a[getRandomInt(0, text.length-1)]=a[getRandomInt(0, text.length-1)];
     }
@@ -145,8 +157,8 @@ function change_words(json) {
 //change_words(text)
 
 function random_delete(json) {
-    text=json['text'];
-    a=text.split("");
+    var text=json['text'];
+    var a = text.split("");
     for (i=0;i<a.length;i=i+getRandomInt(1, 9)) {
         rand_numb=getRandomInt(1, 3)
         for(j=0;j<rand_numb;++j){
@@ -165,12 +177,13 @@ var addtri="и прежде всего, необходимо подготови�
 var rand_texts=[adddin,adddva, addtri];
 
 function add_random(json) {
-    text=json['text'];
-    count=0;
-    a=text.split(" ");
+    var text=json['text'];
+    var count=0;
+    //console.log('wertyuioertyuiertyui:\t\t',text.split(" "));
+    var a = text.split(" ");
     rand_numb=getRandomInt(5,a.length/2);
     for (i=rand_numb;i<a.length;i=i+rand_numb) {
-        str="";
+        var str="";
         for(j=i;j<a.length;++j){
             str=str+' '+a[j];
         }
@@ -202,24 +215,24 @@ function random_to_email(){
     {subject:'Do not ignore!', text:'I am a cutie :3'},
     {subject:'I little post gnome!', text:'Where is my snow?'},
     {subject:'Hello! My name is johnny Catsvill!', text:'And today we start this post =)'},
-    {subject:'Attention!', text:'Thank you for your attention!'}]
+    {subject:'Attention!', text:'Thank you for your attention!'}];
 
     var mas_to = [];
-    bd.find({},function(err,a) {
+    bd.find({}, function(err, a) {
         for(i=0;i<a.length;i++){
-            mas_to[i] = a[i]['to'];
+            mas_to[i] = a[i].to;
         }
-
-        for(i=0;i<a.length;i++){
-            num = getRandomInt(0,sub_text.length)
-            ss_to['to'] = mas_to[getRandomInt(0,a.length)];
-            ss_to['subject'] = sub_text[num]['subject'];
-            ss_to['text'] = sub_text[num]['text'];
-            //console.log(ss_to);
-            request.post('http://localhost:' + port.toString() + '/send/' + 'spam_bot', ss_to, function (err, res, body) {
+        //console.log(mas_to);
+        //for(i=0;i<a.length;i++){
+            var num = getRandomInt(0,sub_text.length);
+            ss_to['to'] = mas_to[getRandomInt(0,a.length-1)];
+            ss_to['subject'] = sub_text[num].subject;
+            ss_to['text'] = sub_text[num].text;
+            //console.log('ss_to', ss_to);
+            request.post('http://localhost:' + port.toString() + '/send/spam_bot', {form: ss_to}, function (err, res, body) {
                 console.log('spambot: ', body);
             });
-        }
+        //}
 
     });
 
