@@ -15,7 +15,7 @@ var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 
-app.get('/', function (req, res) {
+/*app.get('/', function (req, res) {
     res.send('<html><body>' +
         '<form action="http://localhost:8000/send/1" method="post">' +
         '<br><p>From:</p><input name="from" value="2">' +
@@ -24,7 +24,7 @@ app.get('/', function (req, res) {
         '<br><p>Text:</p><input name="text" value="this is text">' +
         '<br><input type="submit" value="submit">' +
         '</form></body></html>');
-});
+});*/
 
 app.get('/in/:email', function (req, res) {
     console.log('GET ' + req.ip);
@@ -36,6 +36,27 @@ app.get('/in/:email', function (req, res) {
             res.send(err);
         }
     });
+});
+
+app.get('/', function (req, res) {
+    var options = {
+        root: __dirname + '/public/',
+        dotfiles: 'deny',
+        headers: {
+            'x-timestamp': Date.now(),
+            'x-sent': true
+        }
+    };
+    var fileName = './index.html';
+    res.sendFile(fileName, options, function (err) {
+        if (err) {
+            console.log(err);
+            res.status(err.status).end();
+        }
+        else {
+            console.log('Sent:', fileName);
+        }
+    })
 });
 
 app.get('/out/:email', function (req, res) {
