@@ -72,7 +72,7 @@ app.post('/send/:user', function (req, res) {
                     //var r = data._id;
                     if (!is_sent) {
                         is_sent = true;
-                        res.json(data);
+                        res.json(fun_id);
                     }
                 } else {
                     console.log(err);
@@ -96,6 +96,7 @@ function register_user(user, func){
     bd.find({"to":user}, function (err, data) {
         if (data.length > 0) {
             func(err, {was_registered: false});
+            console.log('WAS USER: ', user);
         } else {
             var hello = {
                 from: 'not-reply@mailrussia.io',
@@ -137,7 +138,7 @@ function post_new(path, mail, del, func) {
     var time_now = new Date();
     mail['from'] = path;
     mail['time'] = time_now.getTime();
-    console.log(mail);
+    //console.log(mail);
     if (typeof mail['to'] == 'undefined') {
         mail['to'] = 'spam'
     }
@@ -161,7 +162,7 @@ function getPresetRandom() {
 }
 
 function getPresetRandom_forfuncs() {
-    var r = /*[0, 0, 0, 1, 2, 3,*/ [4];
+    var r = [0, 0, 0, 1, 2, 3, 4];
     return r[Math.floor(Math.random() * r.length)];
 }
 
@@ -169,7 +170,7 @@ function getPresetRandom_forfuncs() {
 function change_words(json) {
     var text=json['text'];
     var a = text.split("");
-    for (var i=0;i<text.length;++i) {
+    for (var i=0;i<text.length;i += 7) {
         a[getRandomInt(0, text.length-1)]=a[getRandomInt(0, text.length-1)];
     }
     text=a.join('');
@@ -181,8 +182,8 @@ function change_words(json) {
 function random_delete(json) {
     var text=json['text'];
     var a = text.split("");
-    for (i=0;i<a.length;i=i+getRandomInt(1, 9)) {
-        var rand_numb=getRandomInt(1, 3);
+    for (i=0;i<a.length;i=i+getRandomInt(4, 9)) {
+        var rand_numb=getRandomInt(1, 2);
         for(j=0;j<rand_numb;++j){
             a[i]="";
         }
@@ -280,4 +281,3 @@ function the_fragmentation_of_the_text(json)
     }
     return mas_drop
 }
-
