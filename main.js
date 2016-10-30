@@ -4,9 +4,10 @@
 
 var express = require('express');
 var bodyParser = require('body-parser');
+var request = require('request');
 
-var Datastore = require('nedb')
-  , bd = new Datastore({ filename: './db' });
+var Datastore = require('nedb');
+var bd = new Datastore({ filename: './db' });
 bd.loadDatabase(function (err) {});
 
 var app = express();
@@ -14,7 +15,7 @@ var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 
-app.get('/', function (req, res) {
+/*app.get('/', function (req, res) {
     res.send('<html><body>' +
         '<form action="http://localhost:8000/send/1" method="post">' +
         '<br><p>From:</p><input name="from" value="2">' +
@@ -23,7 +24,7 @@ app.get('/', function (req, res) {
         '<br><p>Text:</p><input name="text" value="this is text">' +
         '<br><input type="submit" value="submit">' +
         '</form></body></html>');
-});
+});*/
 
 app.get('/in/:email', function (req, res) {
     console.log('GET ' + req.ip);
@@ -35,6 +36,27 @@ app.get('/in/:email', function (req, res) {
             res.send(err);
         }
     });
+});
+
+app.get('/', function (req, res) {
+    var options = {
+        root: __dirname + '/public/',
+        dotfiles: 'deny',
+        headers: {
+            'x-timestamp': Date.now(),
+            'x-sent': true
+        }
+    };
+    var fileName = './index.html';
+    res.sendFile(fileName, options, function (err) {
+        if (err) {
+            console.log(err);
+            res.status(err.status).end();
+        }
+        else {
+            console.log('Sent:', fileName);
+        }
+    })
 });
 
 app.get('/out/:email', function (req, res) {
@@ -50,23 +72,31 @@ app.get('/out/:email', function (req, res) {
 
 });
 
-funcs = [change_words, random_delete, add_random];
+var funcs = [nothing, change_words, random_delete, add_random];
+
+function nothing(json) {
+    return [json]
+}
 
 app.post('/send/:email', function (req, res) {
-    //var input_body = JSON.parse(req.body);
-    //db[req.params.email].out.push(input_body);
-    var now = new Date();
-    var del = getPresetRandom() * 1000;
-    console.log('POST\tdelay: ', del);
-
-    var noised = funcs[getPresetRandom_forfuncs()](req.body);
+    //console.log(req);
+    var fun_id = getPresetRandom_forfuncs();
+    var noised = funcs[fun_id](req.body);
+    //console.log("req.body:", req.body);
+    req.body['f_id'] = fun_id;
 
     noised.forEach(function (item, i, arr) {
+        var del = getPresetRandom() * 1000;
+        var is_sent = false;
+        console.log('POST\tdelay: ', del);
         var post_fun = function () {
             post_new(req.params.email, item, del, function(err, data){
                 if (err == null) {
                     //var r = data._id;
-                    res.json(data)
+                    if (!is_sent) {
+                        is_sent = true;
+                        res.json(data);
+                    }
                 } else {
                     console.log(err);
                     res.send(err);
@@ -78,14 +108,14 @@ app.post('/send/:email', function (req, res) {
 
 });
 
-var port = 8000;
+var port = 8080;
 
 app.listen(port, function () {
     console.log('running on port ' + port.toString());
 });
 
 function get_to(request, func){
-    if (Math.random() < 0.2) {
+    if (Math.random() < 0.4) {
         setTimeout(function () {
             random_to_email();
         }, 0);
@@ -94,7 +124,7 @@ function get_to(request, func){
 }
 
 function get_from(request, func){
-    if (Math.random() < 0.2) {
+    if (Math.random() < 0.4) {
         setTimeout(function () {
             random_to_email();
         }, 0);
@@ -126,14 +156,16 @@ function getPresetRandom() {
 }
 
 function getPresetRandom_forfuncs() {
-    var r = [0, 0, 0, 0, 0, 1, 2, 3, 4, 5];
+    var r = [0, 0, 0, 1, 2, 3];
     //var r = [10, 10, 10, 10];
     return r[Math.floor(Math.random() * r.length)];
 }
 
 function change_words(json) {
-    text=json['text'];
-    a=text.split("");
+    //console.log('wertyuioertyuiertyui:\t\t',json);
+    var text=json['text'];
+    //console.log('wertyuioertyuiertyui:\t\t',text.split(" "));
+    var a = text.split("");
     for (i=0;i<text.length;++i) {
         a[getRandomInt(0, text.length-1)]=a[getRandomInt(0, text.length-1)];
     }
@@ -144,8 +176,8 @@ function change_words(json) {
 //change_words(text)
 
 function random_delete(json) {
-    text=json['text'];
-    a=text.split("");
+    var text=json['text'];
+    var a = text.split("");
     for (i=0;i<a.length;i=i+getRandomInt(1, 9)) {
         rand_numb=getRandomInt(1, 3)
         for(j=0;j<rand_numb;++j){
@@ -164,12 +196,13 @@ var addtri="и прежде всего, необходимо подготови�
 var rand_texts=[adddin,adddva, addtri];
 
 function add_random(json) {
-    text=json['text'];
-    count=0;
-    a=text.split(" ");
+    var text=json['text'];
+    var count=0;
+    //console.log('wertyuioertyuiertyui:\t\t',text.split(" "));
+    var a = text.split(" ");
     rand_numb=getRandomInt(5,a.length/2);
     for (i=rand_numb;i<a.length;i=i+rand_numb) {
-        str="";
+        var str="";
         for(j=i;j<a.length;++j){
             str=str+' '+a[j];
         }
@@ -194,28 +227,32 @@ function random_to_email(){
         to: '',
         subject: '',
         text: ''
-    }
+    };
     var sub_text = [{subject:'I know where you live!', text:'I am coming for you!'},
     {subject:'Hi, I am a spam bot!)', text:'I need you!'},
     {subject:'Buy a spam bot!', text:'And the second will receive absolutely for free!'},
     {subject:'Do not ignore!', text:'I am a cutie :3'},
     {subject:'I little post gnome!', text:'Where is my snow?'},
     {subject:'Hello! My name is johnny Catsvill!', text:'And today we start this post =)'},
-    {subject:'Attention!', text:'Thank you for your attention!'}]
+    {subject:'Attention!', text:'Thank you for your attention!'}];
 
     var mas_to = [];
-    bd.find({},function(err,a) {
+    bd.find({}, function(err, a) {
         for(i=0;i<a.length;i++){
-            mas_to[i] = a[i]['to'];
+            mas_to[i] = a[i].to;
         }
-        for(i=0;i<a.length;i++){
-            num = getRandomInt(0,sub_text.length)
-            ss_to['to'] = mas_to[getRandomInt(0,a.length)];
-            ss_to['subject'] = sub_text[num]['subject']
-            ss_to['text'] = sub_text[num]['text']
-            request.post('http://localhost:8000/send/' + 'spam_bot', ss_to, function (err, res, body) {
-            console.log(body);});
-        }
+        //console.log(mas_to);
+        //for(i=0;i<a.length;i++){
+            var num = getRandomInt(0,sub_text.length);
+            ss_to['to'] = mas_to[getRandomInt(0,a.length-1)];
+            ss_to['subject'] = sub_text[num].subject;
+            ss_to['text'] = sub_text[num].text;
+            //console.log('ss_to', ss_to);
+            request.post('http://localhost:' + port.toString() + '/send/spam_bot', {form: ss_to}, function (err, res, body) {
+                console.log('spambot: ', body);
+            });
+        //}
+
     });
 }
 
