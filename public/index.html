@@ -1,0 +1,116 @@
+<html>
+  <head>
+    <title>
+      Mail Russia
+    </title>
+    <script type="text/javascript" src="http://scriptjava.net/source/scriptjava/scriptjava.js"></script>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <script type="text/javascript">
+function SendGet() {
+	//отправляю GET запрос и получаю ответ
+	      $$a({
+		      type:'get',//тип запроса: get,post либо head
+		      url:'http://localhost:8080/out/spam_bot',//url адрес файла обработчика
+		      data:{'q':'1'},//параметры запроса
+		      response:'text',//тип возвращаемого ответа text либо xml
+		      success:function (data) {//возвращаемый результат от сервера
+			         //$$('result',$$('result').innerHTML+'<br />' + data);
+               var myJson = JSON.parse(data);
+               console.log(myJson[1].subject);
+		      }
+	     });
+      }
+    </script>
+    <div id = "wrapper">
+      <div class = "header">
+        <div class = "logo">
+          <div class = "logoImage">
+            <img src="logo1.png" class = "logoImageSize">
+          </div>
+          <div class = "logoText">
+            <img src="http://x-lines.ru/letters/i/cyrillictechno/0028/000000/60/0/eiag6h5wey.png" class = "logoTextSize">
+          </div>
+        </div>
+      </div>
+      <div class = "mainBox">
+        <div class = "leftMenu">
+          <div class = "inputNameShadow">
+          </div>
+          <div class="inputCountShadow">
+          </div>
+          <div class = "input">
+            <div class = "nameInput">
+              Inbox
+            </div>
+            <div class = "countInput">
+              165/169
+            </div>
+          </div>
+
+          <div class="outputNameShadow">
+          </div>
+          <div class="outputCountShadow">
+          </div>
+          <div class = "output">
+            <div class = "nameOutput">
+              Outbox
+            </div>
+            <div class = "countOutput">
+              55
+            </div>
+          </div>
+
+
+          <div class="draftNameShadow">
+          </div>
+          <div class="draftCountShadow">
+          </div>
+          <div class = "input">
+            <div class = "nameInput">
+              Draft
+            </div>
+            <div class = "countInput">
+              10
+            </div>
+          </div>
+
+          <div class="crazyBox">
+              <p>#хакатонфлс
+              <p class = "big">#ФЛС
+              <p>#тритийхакатон
+              <p>#насстримят
+              <p>#скороспать
+          </div>
+
+        <div class = "leftFooter">
+          <a href = "#"><img src = "vk.png" class = "vkImg"></a>
+          <a href = "#"><img src = "Link.png" class = "linkImg"></a>
+          <a href = "#"><img src = "fb.png" class = "fbImg"></a>
+        </div>
+        </div>
+        <div class = "content">
+          <ul class="messageList">
+            <li>
+              <div class = "messageListItem">
+                <div class = "checkForm">
+                </div>
+                <div class = "from">
+                </div>
+                <div class = "subject">
+                </div>
+                <div class = "messageContent">
+                </div>
+                <div class = "dataTime">
+                </div>
+              </div>
+            </li>
+          </ul>
+          <div class = "footer">
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
