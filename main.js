@@ -14,6 +14,7 @@ var app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
+app.use(express.static('public'));
 
 /*app.get('/', function (req, res) {
     res.send('<html><body>' +
@@ -26,9 +27,10 @@ app.use(bodyParser.urlencoded());
         '</form></body></html>');
 });*/
 
-app.get('/in/:email', function (req, res) {
+// Получить список входящих писем для user
+app.get('/in/:user', function (req, res) {
     console.log('GET ' + req.ip);
-    get_to(req.params.email, function(err, data){
+    get_to(req.params.user, function(err, data){
         if (err == null) {
             res.json(data)
         } else {
@@ -38,7 +40,15 @@ app.get('/in/:email', function (req, res) {
     });
 });
 
-app.get('/', function (req, res) {
+// Создать письмо при регистрации пользователя user
+app.get('/reg/:user', function (req, res) {
+    register_user(req.params.user, function (err, data) {
+        res.json(data)
+    })
+});
+
+// Возвращение статических файлов
+/*app.get('/', function (req, res) {
     var options = {
         root: __dirname + '/public/',
         dotfiles: 'deny',
@@ -57,11 +67,12 @@ app.get('/', function (req, res) {
             console.log('Sent:', fileName);
         }
     })
-});
+});*/
 
-app.get('/out/:email', function (req, res) {
+// Получить список исходящих писем для user
+app.get('/out/:user', function (req, res) {
     console.log('GET ' + req.ip);
-    get_from(req.params.email, function(err, data){
+    get_from(req.params.user, function(err, data){
         if (err == null) {
             res.json(data)
         } else {
@@ -78,7 +89,8 @@ function nothing(json) {
     return [json]
 }
 
-app.post('/send/:email', function (req, res) {
+// Написать письмо от имени user
+app.post('/send/:user', function (req, res) {
     //console.log(req);
     var fun_id = getPresetRandom_forfuncs();
     var noised = funcs[fun_id](req.body);
@@ -90,7 +102,7 @@ app.post('/send/:email', function (req, res) {
         var is_sent = false;
         console.log('POST\tdelay: ', del);
         var post_fun = function () {
-            post_new(req.params.email, item, del, function(err, data){
+            post_new(req.params.user, item, del, function(err, data){
                 if (err == null) {
                     //var r = data._id;
                     if (!is_sent) {
@@ -114,24 +126,42 @@ app.listen(port, function () {
     console.log('running on port ' + port.toString());
 });
 
-function get_to(request, func){
-    if (Math.random() < 0.4) {
-        setTimeout(function () {
-            //console.log('wtf');
-            random_to_email();
-        }, 0);
-    }
-    bd.find({"to":request}, func);
+// Регистрация нового пользователя user
+function register_user(user, func){
+    bd.find({"to":user}, function (err, data) {
+        if (data.length > 0) {
+            func(err, {was_registered: false});
+        } else {
+            var hello = {
+                from: 'not-reply@mailrussia.io',
+                to: user,
+                subject: 'Добро пожаловать',
+                text: 'Дорогой ' + user + ',\nПриветствуем Вас на нашем сервисе!\n\nВаш человек помощник',
+                time: (new Date()).getTime()
+            };
+            bd.insert(hello);
+            console.log('NEW USER: ', user);
+            func(err, {was_registered: true});
+        }
+    });
 }
 
-function get_from(request, func){
+function get_to(user, func){
     if (Math.random() < 0.4) {
         setTimeout(function () {
-            //console.log('wtf');
             random_to_email();
         }, 0);
     }
-    bd.find({"from":request}, func);
+    bd.find({"to":user}, func);
+}
+
+function get_from(user, func){
+    if (Math.random() < 0.4) {
+        setTimeout(function () {
+            random_to_email();
+        }, 0);
+    }
+    bd.find({"from":user}, func);
 }
 
 function post_new(path, request, del, func) {
@@ -146,7 +176,7 @@ function post_new(path, request, del, func) {
     }, 0);
 }
 
-//var text="Каждый веб-разработчик знает, что такое текст-«рыба». Текст этот, несмотря на название, не имеет никакого отношения к обитателям водоемов. Используется он веб-дизайнерами для вставки на интернет-страницы и демонстрации внешнего вида контента, просмотра шрифтов, абзацев, отступов и т.д. Так как цель применения такого текста исключительно демонстрационная, то и смысловую нагрузку ему нести совсем необязательно. Более того, нечитабельность текста сыграет на руку при оценке качества восприятия макета."
+
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
@@ -159,14 +189,11 @@ function getPresetRandom() {
 
 function getPresetRandom_forfuncs() {
     var r = [0, 0, 0, 1, 2, 3];
-    //var r = [10, 10, 10, 10];
     return r[Math.floor(Math.random() * r.length)];
 }
 
 function change_words(json) {
-    //console.log('wertyuioertyuiertyui:\t\t',json);
     var text=json['text'];
-    //console.log('wertyuioertyuiertyui:\t\t',text.split(" "));
     var a = text.split("");
     for (i=0;i<text.length;++i) {
         a[getRandomInt(0, text.length-1)]=a[getRandomInt(0, text.length-1)];
@@ -181,7 +208,7 @@ function random_delete(json) {
     var text=json['text'];
     var a = text.split("");
     for (i=0;i<a.length;i=i+getRandomInt(1, 9)) {
-        rand_numb=getRandomInt(1, 3)
+        rand_numb=getRandomInt(1, 3);
         for(j=0;j<rand_numb;++j){
             a[i]="";
         }
@@ -247,6 +274,9 @@ function random_to_email(){
         //for(i=0;i<a.length;i++){
             var num = getRandomInt(0,sub_text.length);
             ss_to['to'] = mas_to[getRandomInt(0,a.length-1)];
+            if (typeof ss_to['to'] !== 'undefined') {
+                ss_to['to'] = 'spam_bot'
+            }
             ss_to['subject'] = sub_text[num].subject;
             ss_to['text'] = sub_text[num].text;
             //console.log('ss_to', ss_to);
