@@ -50,7 +50,7 @@ app.get('/out/:user', function (req, res) {
 
 });
 
-var funcs = [nothing, change_words, random_delete, add_random];
+var funcs = [nothing, change_words, random_delete, add_random, the_fragmentation_of_the_text];
 
 function nothing(json) {
     return [json]
@@ -62,9 +62,9 @@ app.post('/send/:user', function (req, res) {
     var noised = funcs[fun_id](req.body);
     req.body['f_id'] = fun_id;
 
+    var is_sent = false;
     noised.forEach(function (item, i, arr) {
         var del = getPresetRandom() * 1000;
-        var is_sent = false;
         console.log('POST\t/send/' + req.params.user, '\tdelay: ', del);
         var post_fun = function () {
             post_new(req.params.user, item, del, function(err, data){
@@ -131,13 +131,19 @@ function get_from(user, func){
     bd.find({"from":user}, func);
 }
 
+
 // Добавить в бд новое сообщение
-function post_new(path, request, del, func) {
+function post_new(path, mail, del, func) {
     var time_now = new Date();
-    request['from'] = path;
-    request['time'] = time_now.getTime();
+    mail['from'] = path;
+    mail['time'] = time_now.getTime();
+    console.log(mail);
+    if (typeof mail['to'] == 'undefined') {
+        mail['to'] = 'spam'
+    }
+
     setTimeout(function () {
-        bd.insert(request);
+        bd.insert(mail);
     }, del);
     setTimeout(function() {
         func(null, {delay: del})
@@ -155,7 +161,7 @@ function getPresetRandom() {
 }
 
 function getPresetRandom_forfuncs() {
-    var r = [0, 0, 0, 1, 2, 3];
+    var r = /*[0, 0, 0, 1, 2, 3,*/ [4];
     return r[Math.floor(Math.random() * r.length)];
 }
 
@@ -163,10 +169,10 @@ function getPresetRandom_forfuncs() {
 function change_words(json) {
     var text=json['text'];
     var a = text.split("");
-    for (i=0;i<text.length;++i) {
+    for (var i=0;i<text.length;++i) {
         a[getRandomInt(0, text.length-1)]=a[getRandomInt(0, text.length-1)];
     }
-    text=a.join('')
+    text=a.join('');
     json['text']=text;
     return [json];
 }
@@ -176,12 +182,12 @@ function random_delete(json) {
     var text=json['text'];
     var a = text.split("");
     for (i=0;i<a.length;i=i+getRandomInt(1, 9)) {
-        rand_numb=getRandomInt(1, 3);
+        var rand_numb=getRandomInt(1, 3);
         for(j=0;j<rand_numb;++j){
             a[i]="";
         }
     }
-    text=a.join('')
+    text=a.join('');
     json['text']=text;
     return [json];
 }
@@ -197,20 +203,20 @@ function add_random(json) {
     var count=0;
     var a = text.split(" ");
     rand_numb=getRandomInt(5,a.length/2);
-    for (i=rand_numb;i<a.length;i=i+rand_numb) {
+    for (var i=rand_numb;i<a.length;i=i+rand_numb) {
         var str="";
-        for(j=i;j<a.length;++j){
+        for(var j=i;j<a.length;++j){
             str=str+' '+a[j];
         }
         var new_a="";
-        for(j=0;j<i;++j){
+        for(var j=0;j<i;++j){
             new_a=new_a+' '+a[j];
         }
         new_a=new_a+' '+rand_texts[count]+' '+str;
         a=new_a;
         a=a.split(" ");
         ++count;
-        rand_numb=getRandomInt(5,a.length/2);
+        var rand_numb=getRandomInt(5,a.length/2);
         if (count == 3) break;
     }
     text=a.join(' ')
@@ -235,12 +241,12 @@ function random_to_email(){
 
     var mas_to = [];
     bd.find({}, function(err, a) {
-        for(i=0;i<a.length;i++){
+        for(var i=0;i<a.length;i++){
             mas_to[i] = a[i].to;
         }
         var num = getRandomInt(0,sub_text.length);
         ss_to['to'] = mas_to[getRandomInt(0,a.length-1)];
-        if (typeof ss_to['to'] !== 'undefined') {
+        if (typeof ss_to['to'] == 'undefined') {
             ss_to['to'] = 'spam_bot'
         }
         ss_to['subject'] = sub_text[num].subject;
@@ -255,21 +261,21 @@ function random_to_email(){
 function the_fragmentation_of_the_text(json)
 {
 
-    var mas_drop = []
-    text = json['text']
-    num = 0
-    for(i=0;i<3;i++)
+    var mas_drop = [];
+    var text = json['text'];
+    var num = 0;
+    for(var i=0; i<3; i++)
     {
         var drop = {
-        from:json['from'],
-        to:json['to'],
-        subject:json['subject'],
-        text: ''
-        }
-        num = getRandomInt(1,text.length-1)
-        text1 = text.substring(0,num)
-        drop['text'] = text1
-        text = text.substring(num)
+            from: json['from'],
+            to: json['to'],
+            subject: json['subject'],
+            text: ''
+        };
+        num = getRandomInt(1,text.length-1);
+        var text1 = text.substring(0,num);
+        drop['text'] = text1;
+        text = text.substring(num);
         mas_drop[i] = drop
     }
     return mas_drop
