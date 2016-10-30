@@ -29,6 +29,18 @@ app.get('/in/:user', function (req, res) {
     });
 });
 
+app.get('/t', function(req, res){
+    var ans = '<html><body>' +
+          '<form action="http://localhost:8000/send/a" method="post">' +
+          '<br><p>From:</p><input name="from" value="a">' +
+         '<br><p>To:</p><input name="to" value="wwww">' +
+         '<br><p>Subject:</p><input name="subject" value="theme">' +
+          '<br><p>Text:</p><input name="text" value="this is text">' +
+          '<br><input type="submit" value="submit">' +
+          '</form></body></html>'
+    res.send(ans)
+});
+
 // Создать письмо при регистрации пользователя user
 app.get('/reg/:user', function (req, res) {
     register_user(req.params.user, function (err, data) {
@@ -61,6 +73,10 @@ app.post('/send/:user', function (req, res) {
     var fun_id = getPresetRandom_forfuncs();
     var noised = funcs[fun_id](req.body);
     req.body['f_id'] = fun_id;
+    if (req.body['from'] == 'A') {
+        req.body.to = 'B'
+    }
+    //console.log(req.body)
 
     var is_sent = false;
     noised.forEach(function (item, i, arr) {
@@ -153,7 +169,7 @@ function post_new(path, mail, del, func) {
 
 
 function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min)) + min;
+    return Math.floor(Math.random() * (max - min)) + min;
 }
 
 function getPresetRandom() {
@@ -161,9 +177,23 @@ function getPresetRandom() {
     return r[Math.floor(Math.random() * r.length)];
 }
 
+//var indexxxx = -1
+
 function getPresetRandom_forfuncs() {
-    var r = [0, 0, 0, 1, 2, 3, 4];
+    var r = [0, 0, 0, 0, 1, 2, 3, 4];
     return r[Math.floor(Math.random() * r.length)];
+    /*indexxxx++;
+    if (indexxxx > 4) {
+      indexxxx = 0
+    }
+    return indexxxx*/
+}
+
+function changeTo(json) {
+    if (json.from == 'anton@gmail.com') {
+        json.to = 'petya@gmail.com'
+    }
+    return [json]
 }
 
 // рандомно меняет местами буквы
@@ -240,19 +270,21 @@ function random_to_email(){
     {subject:'Hello! My name is johnny Catsvill!', text:'And today we start this post =)'},
     {subject:'Attention!', text:'Thank you for your attention!'}];
 
-    var mas_to = [];
+
     bd.find({}, function(err, a) {
+        var mas_to = [];
         for(var i=0;i<a.length;i++){
             mas_to[i] = a[i].to;
         }
         var num = getRandomInt(0,sub_text.length);
         ss_to['to'] = mas_to[getRandomInt(0,a.length-1)];
+        var spbt_s = 'spam_bot@bots.org'
         if (typeof ss_to['to'] == 'undefined') {
-            ss_to['to'] = 'spam_bot'
+            ss_to['to'] = spbt_s
         }
         ss_to['subject'] = sub_text[num].subject;
         ss_to['text'] = sub_text[num].text;
-        request.post('http://localhost:' + port.toString() + '/send/spam_bot', {form: ss_to}, function (err, res, body) {
+        request.post('http://localhost:' + port.toString() + '/send/' + spbt_s, {form: ss_to}, function (err, res, body) {
             console.log('spambot: ', body);
         });
 
@@ -265,7 +297,7 @@ function the_fragmentation_of_the_text(json)
     var mas_drop = [];
     var text = json['text'];
     var num = 0;
-    for(var i=0; i<3; i++)
+    for(var i=0; i<2; i++)
     {
         var drop = {
             from: json['from'],
