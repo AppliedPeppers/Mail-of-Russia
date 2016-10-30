@@ -55,11 +55,8 @@ var test_1_mail_3 = {
 var tests=[test_two_mail_1, test_two_mail_2, test_one_mail_1, test_one_mail_2, test_1_mail_1, test_1_mail_2, test_1_mail_3];
 
 for (i=0;i<7;++i) {
-    request.post('http://localhost:8080/send/' + tests[i].from, {form: tests[i]}, function (err, res, body) {
+    request.post('http://localhost:8000/send/' + tests[i].from, tests[i], function (err, res, body) {
         console.log(body);
-        if (err != null) {
-            console.log(err)
-        }
     });
     //bd.insert(tests[i]);
 }

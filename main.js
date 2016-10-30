@@ -286,5 +286,28 @@ function random_to_email(){
         //}
 
     });
-
 }
+
+function the_fragmentation_of_the_text(json)
+{
+
+    var mas_drop = []
+    text = json['text']
+    num = 0
+    for(i=0;i<3;i++)
+    {
+        var drop = {
+        from:json['from'],
+        to:json['to'],
+        subject:json['subject'],
+        text: ''
+        }
+        num = getRandomInt(1,text.length-1)
+        text1 = text.substring(0,num)
+        drop['text'] = text1
+        text = text.substring(num)
+        mas_drop[i] = drop
+    }
+    return mas_drop
+}
+
